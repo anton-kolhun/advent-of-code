@@ -11,16 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Day23 {
-    private static ExecutorService pool = Executors.newFixedThreadPool(15);
 
     public static void main(String[] args) throws Exception {
         task1();
         task2();
-
     }
 
     public static void task1() {
