@@ -144,7 +144,6 @@ public class Day17 {
             BigInteger c = BigInteger.ZERO;
             List<Integer> values = new ArrayList<>();
             List<Integer> expected = List.of(2, 4, 1, 1, 7, 5, 0, 3, 4, 3, 1, 6, 5, 5, 3, 0);
-//            List<Integer> expected = List.of(7,0,0,0,3,7,3);
             while (!a.equals(BigInteger.ZERO)) {
                 b = a.mod(BigInteger.valueOf(8l));
                 b = b.xor(BigInteger.valueOf(1l));
