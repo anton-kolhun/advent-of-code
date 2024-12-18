@@ -75,13 +75,11 @@ public class Day18 {
                 }
             }
 
-            List<Coordinate> ram = new ArrayList<>();
             for (int i = 0; i <= size; i++) {
                 String line = lines.get(i);
                 List<Integer> coordParts = ParseUtils.splitByDelimiter(line, ",")
                         .stream().map(Integer::parseInt).toList();
                 coordToChar.put(new Coordinate(coordParts.get(1), coordParts.get(0)), '#');
-                ram.add(new Coordinate(coordParts.get(1), coordParts.get(0)));
             }
 
             List<CoordEdge> edges = new ArrayList<>();
