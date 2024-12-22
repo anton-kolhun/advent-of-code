@@ -98,6 +98,31 @@ public class GraphUtils {
         return Collections.emptyList();
     }
 
+    public static List<Coordinate> bfs(List<CoordEdge> edges, Coordinate start, Coordinate end) {
+        Map<Coordinate, List<CoordEdge>> fromEdges = edges.stream()
+                .collect(Collectors.groupingBy(edge -> edge.from));
+        Set<Coordinate> visited = new HashSet<>();
+        List<List<Coordinate>> paths = new ArrayList<>();
+        List<Coordinate> startList = Arrays.asList(start);
+        paths.add(startList);
+        while (!paths.isEmpty()) {
+            List<Coordinate> currentPath = paths.remove(0);
+            var s = currentPath.get(currentPath.size() - 1);
+            if (s.equals(end)) {
+                return currentPath;
+            }
+            for (CoordEdge edge : fromEdges.getOrDefault(s, new ArrayList<>())) {
+                if (!visited.contains(edge.to)) {
+                    List<Coordinate> nextPath = new ArrayList<>(currentPath);
+                    nextPath.add(edge.to);
+                    visited.add(edge.to);
+                    paths.add(nextPath);
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
+
 
     public static List<String> dfs(List<Edge> edges, String start, String end) {
         Map<String, List<Edge>> fromEdges = edges.stream()
@@ -296,6 +321,70 @@ public class GraphUtils {
         return coordToDistance.get(end);
 
     }
+
+
+    public static List<List<Coordinate>> dejkstraMultiple(List<CoordEdge> edges, Coordinate start, Coordinate end) {
+        Map<Coordinate, List<CoordEdge>> fromEdges = edges.stream()
+                .collect(Collectors.groupingBy(edge -> edge.from));
+
+        Set<Coordinate> visited = new HashSet<>();
+        Map<Coordinate, List<List<Coordinate>>> coordToDistance = new HashMap<>();
+        List<Coordinate> initial = new ArrayList<>();
+        initial.add(start);
+        coordToDistance.put(start, List.of(initial));
+        PriorityQueue<DistanceCoord> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.distance));
+        priorityQueue.add(new DistanceCoord(start, 0));
+        boolean notFound = true;
+        while (!priorityQueue.isEmpty()) {
+            Coordinate coordMin = findDistCoord(priorityQueue, visited);
+            if (coordMin.equals(end)) {
+                break;
+            }
+            List<List<Coordinate>> minPaths = coordToDistance.getOrDefault(coordMin, new ArrayList<>());
+            visited.add(coordMin);
+            List<CoordEdge> fromEdgs = fromEdges.getOrDefault(coordMin, new ArrayList<>());
+            for (CoordEdge fromEdge : fromEdgs) {
+                var pathTo = coordToDistance.get(fromEdge.to);
+                var pathTosize = Integer.MAX_VALUE;
+                if (pathTo != null) {
+                    pathTosize = pathTo.get(0).size();
+                }
+                int minPathSize = minPaths.get(0).size();
+                if (pathTosize > minPathSize + 1) {
+                    List<List<Coordinate>> newPaths = new ArrayList<>();
+                    for (List<Coordinate> minPath : minPaths) {
+                        var newPath = new ArrayList<>(minPath);
+                        newPath.add(fromEdge.to);
+                        newPaths.add(newPath);
+                    }
+                    coordToDistance.put(fromEdge.to, newPaths);
+                    priorityQueue.add(new DistanceCoord(fromEdge.to, newPaths.get(0).size()));
+                }
+
+                if (pathTosize == minPathSize + 1) {
+                    List<List<Coordinate>> newPaths = new ArrayList<>();
+                    for (List<Coordinate> minPath : minPaths) {
+                        var newPath = new ArrayList<>(minPath);
+                        newPath.add(fromEdge.to);
+                        newPaths.add(newPath);
+                    }
+                    List<List<Coordinate>> updated = new ArrayList<>(coordToDistance.get(fromEdge.to));
+                    updated.addAll(newPaths);
+                    coordToDistance.put(fromEdge.to, updated);
+                    priorityQueue.add(new DistanceCoord(fromEdge.to, newPaths.get(0).size()));
+                }
+
+
+                if (fromEdge.to.equals(end)) {
+                    notFound = false;
+                }
+
+            }
+        }
+        return coordToDistance.get(end);
+
+    }
+
 
     private static class DistanceCoord {
         private Coordinate point;
