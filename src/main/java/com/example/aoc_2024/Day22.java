@@ -77,7 +77,7 @@ public class Day22 {
             deltas.add(diff);
             currentPrice = firstDigit;
         }
-        for (int j = deltas.size() - 1; j >= 3; j--) {
+        for (int j = 3; j < deltas.size(); j++) {
             int price = firstDigits.get(j);
             Integer currentDif = deltas.get(j);
             Integer minus1 = deltas.get(j - 1);
@@ -87,7 +87,7 @@ public class Day22 {
 
             var initialList = new HashSet<>(Set.of(new IndexData(index, price, j)));
             seqToIndex.merge(chain, initialList, (old, newL) -> {
-                old.remove(new IndexData(index, 0, 0));
+//                old.remove(new IndexData(index, 0, 0));
                 old.addAll(newL);
                 return old;
             });
