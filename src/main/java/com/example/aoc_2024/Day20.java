@@ -22,11 +22,11 @@ public class Day20 {
     );
 
     public static void main(String[] args) {
-        task2();
+        task1And2();
     }
 
 
-    public static void task2() {
+    public static void task1And2() {
         List<String> lines = FilesUtils.readFile("aoc_2024/day20.txt");
         Map<Coordinate, Character> coords = new HashMap();
         Coordinate start = null;
@@ -55,7 +55,6 @@ public class Day20 {
         calcCheats(path, coords, distFromStart, 2);
         calcCheats(path, coords, distFromStart, 20);
     }
-
 
     private static void calcCheats(List<Coordinate> path, Map<Coordinate, Character> coords,
                                    Map<Coordinate, Integer> distFromStart, int cheatTime) {
