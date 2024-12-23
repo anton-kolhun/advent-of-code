@@ -163,9 +163,39 @@ public class GraphUtils {
         return coord;
     }
 
+    public static List<Coordinate> bfs(List<CoordEdge> edges, Coordinate start, Coordinate end, int sizeLessThan) {
+        Map<Coordinate, List<CoordEdge>> fromEdges = edges.stream()
+                .collect(Collectors.groupingBy(edge -> edge.from));
+        Set<Coordinate> visited = new HashSet<>();
+        List<List<Coordinate>> paths = new ArrayList<>();
+        List<Coordinate> startList = Arrays.asList(start);
+        paths.add(startList);
+        while (!paths.isEmpty()) {
+            List<Coordinate> currentPath = paths.remove(0);
+            var s = currentPath.get(currentPath.size() - 1);
+            if (s.equals(end)) {
+                return currentPath;
+            }
+            if (currentPath.size() > sizeLessThan) {
+                return Collections.emptyList();
+            }
+            for (CoordEdge edge : fromEdges.getOrDefault(s, new ArrayList<>())) {
+                if (!visited.contains(edge.to)) {
+                    List<Coordinate> nextPath = new ArrayList<>(currentPath);
+                    nextPath.add(edge.to);
+                    visited.add(edge.to);
+                    paths.add(nextPath);
+                }
+            }
+        }
+        return Collections.emptyList();
+
+    }
+
 
     @AllArgsConstructor
     @ToString
+
     public static class Edge {
         public String from;
         public String to;
