@@ -37,22 +37,25 @@ public class Day14Part2 {
         Map<Set<Coordinate>, Integer> unique = new HashMap<>();
 
 
-        int requiredStep = 174 + (1000000000 - 174) % 72;
+        //requiredStep = initialPositionOfCycle + (steps - initialPositionOfCycle ) % cycleLength
+        int requiredStep = 175 + (1000000000 - 175) % 72;
+
 
         for (int i = 0; i < requiredStep; i++) {
             System.out.println(i + 1);
             updatedRocks = doFullCycle(lines, rocks, obstacles);
-/*            if (i == 200) {
-                //detect cycle length - 72;
+            if (i == 200) {
+                //detect cycle length =  72;
                 unique.put(updatedRocks, 200);
-            }*/
+            }
             rocks = updatedRocks;
             //print(updatedRocks, obstacles, lines);
             System.out.println(" ");
-//            if (unique.containsKey(updatedRocks)) {
-//                //initial position 174
-//                System.out.println("cycle initial position detected");
-//            } else {
+            if (unique.containsKey(updatedRocks)) {
+                //initial position 175 == i + 1
+                System.out.println("cycle initial position detected");
+            }
+//            else {
 //                unique.put(updatedRocks, i);
 //            }
         }
