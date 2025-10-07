@@ -437,6 +437,17 @@ public class GraphUtils {
         return coord;
     }
 
+    private static DistanceCoord findDistCoordV2(PriorityQueue<DistanceCoord> distances, Set<Coordinate> visited) {
+        if (distances.isEmpty()) {
+            return null;
+        }
+        DistanceCoord coord = distances.poll();
+        while (visited.contains(coord)) {
+            coord = distances.poll();
+        }
+        return coord;
+    }
+
 
     public static enum Direction {
         RIGHT(new Coordinate(0, 1)), LEFT(new Coordinate(0, -1)), DOWN(new Coordinate(1, 0)), UP(new Coordinate(-1, 0));
@@ -451,6 +462,60 @@ public class GraphUtils {
             this.shift = coord;
         }
 
+    }
+
+    public static List<Coordinate> dejkstraByWeight(List<CoordEdge> edges, Coordinate start, Coordinate end) {
+        Map<Coordinate, List<CoordEdge>> fromEdges = edges.stream()
+                .collect(Collectors.groupingBy(edge -> edge.from));
+        Map<CoordEdge, Integer> edgesWeight = new HashMap<>();
+        for (CoordEdge edge : edges) {
+            edgesWeight.put(new CoordEdge(edge.from, edge.to, edge.weight), edge.weight);
+        }
+
+        Set<Coordinate> visited = new HashSet<>();
+        Map<Coordinate, List<Coordinate>> coordToDistance = new HashMap<>();
+        List<Coordinate> initial = new ArrayList<>();
+        initial.add(start);
+        coordToDistance.put(start, initial);
+        PriorityQueue<DistanceCoord> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(o -> o.distance));
+        priorityQueue.add(new DistanceCoord(start, 0));
+        boolean notFound = true;
+        while (notFound && !priorityQueue.isEmpty()) {
+            DistanceCoord distCoord = findDistCoordV2(priorityQueue, visited);
+            Coordinate coordMin = distCoord.point;
+            List<Coordinate> minPath = coordToDistance.getOrDefault(coordMin, new ArrayList<>());
+            int minPathWeight = distCoord.distance;
+            visited.add(coordMin);
+            List<CoordEdge> fromEdgs = fromEdges.getOrDefault(coordMin, new ArrayList<>());
+            for (CoordEdge fromEdge : fromEdgs) {
+                var pathTo = coordToDistance.get(fromEdge.to);
+                var pathTosize = Integer.MAX_VALUE;
+                if (pathTo != null) {
+                    pathTosize = pathTo.size();
+                }
+                if (pathTosize > minPathWeight + fromEdge.weight) {
+                    var newPath = new ArrayList<>(minPath);
+                    newPath.add(fromEdge.to);
+                    coordToDistance.put(fromEdge.to, newPath);
+                    priorityQueue.add(new DistanceCoord(fromEdge.to, getTotalWeight(newPath, edgesWeight)));
+                }
+                if (fromEdge.to.equals(end)) {
+                    notFound = false;
+                }
+
+            }
+        }
+        return coordToDistance.get(end);
+    }
+
+    private static int getTotalWeight(List<Coordinate> path, Map<CoordEdge, Integer> edgesWeight) {
+        int totalWeight = 0;
+        for (int i = 0; i < path.size() - 1; i++) {
+            Coordinate coordinate = path.get(i);
+            Coordinate next = path.get(i + 1);
+            totalWeight += edgesWeight.get(new CoordEdge(coordinate, next));
+        }
+        return totalWeight;
     }
 
 
