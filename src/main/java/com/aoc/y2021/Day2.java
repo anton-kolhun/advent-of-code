@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Day2 {
     public static void main(String[] args) {
+        task1();
         task2();
     }
 
@@ -24,7 +25,8 @@ public class Day2 {
                 y = y - Integer.parseInt(parts.get(1));
             }
         }
-        System.out.println(x * y);
+        int res = x * y;
+        System.out.println("task1: " + res);
     }
 
     private static void task2() {
@@ -43,6 +45,7 @@ public class Day2 {
                 aim = aim - Integer.parseInt(parts.get(1));
             }
         }
-        System.out.println(x * y);
+        int res = x * y;
+        System.out.println("task1: " + res);
     }
 }
