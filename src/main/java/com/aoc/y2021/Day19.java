@@ -12,8 +12,7 @@ import java.util.stream.Collectors;
 
 public class Day19 {
 
-    private static Set<Integer> scannerStart = Collections.emptySet();
-    private static List<List<String>> combins = getCombinations(List.of(new Pair("x", "-x"), new Pair("y", "-y"), new Pair("z", "-z")),
+    private static List<List<String>> combinations = getCombinations(List.of(new Pair("x", "-x"), new Pair("y", "-y"), new Pair("z", "-z")),
             new ArrayList<>());
 
     public static void main(String[] args) {
@@ -27,7 +26,7 @@ public class Day19 {
         for (int i = 0; i < lines.size(); i++) {
             String line = lines.get(i);
             if (line.contains("scanner")) {
-                currentScanner = new Scanner(new ArrayList<>(), scanners.size(), new Coordinate(0, 0, 0));
+                currentScanner = new Scanner(new HashSet<>(), scanners.size(), new Coordinate(0, 0, 0));
                 scanners.add(currentScanner);
                 continue;
             }
@@ -92,9 +91,9 @@ public class Day19 {
             for (Coordinate currentCoord : currentScanner.beacons()) {
                 for (Coordinate toAddCoord : scannerToAdd.beacons()) {
                     Coordinate shift = new Coordinate(currentCoord.x - toAddCoord.x, currentCoord.y - toAddCoord.y(), currentCoord.z - toAddCoord.z());
-                    List<Coordinate> withShift = scannerToAdd.beacons().stream()
+                    Set<Coordinate> withShift = scannerToAdd.beacons().stream()
                             .map(toAdd -> new Coordinate(toAdd.x + shift.x(), toAdd.y + shift.y(), toAdd.z() + shift.z()))
-                            .collect(Collectors.toList());
+                            .collect(Collectors.toSet());
                     var scannerWithShift = new Scanner(withShift, scannerToAdd.index, shift);
                     boolean match = shouldOverlap(currentScanner, scannerWithShift);
                     if (match) {
@@ -123,8 +122,8 @@ public class Day19 {
 
     private static List<Scanner> getScannerViews(Scanner scanner) {
         List<Scanner> views = new ArrayList<>();
-        for (List<String> combin : combins) {
-            Scanner scannerView = new Scanner(new ArrayList<>(), scanner.index, new Coordinate(0, 0, 0));
+        for (List<String> combin : combinations) {
+            Scanner scannerView = new Scanner(new HashSet<>(), scanner.index, new Coordinate(0, 0, 0));
             for (Coordinate beacon : scanner.beacons()) {
                 List<Integer> data = getData(combin, beacon);
                 scannerView.beacons().add(new Coordinate(data.get(0), data.get(1), data.get(2)));
@@ -172,7 +171,7 @@ public class Day19 {
     private record Pair(String left, String right) {
     }
 
-    private record Scanner(List<Coordinate> beacons, int index, Coordinate start) {
+    private record Scanner(Set<Coordinate> beacons, int index, Coordinate start) {
 
         @Override
         public String toString() {
