@@ -16,10 +16,10 @@ public class Day19 {
             new ArrayList<>());
 
     public static void main(String[] args) {
-        task1();
+        task();
     }
 
-    private static void task1() {
+    private static void task() {
         List<String> lines = FilesUtils.readFile("aoc_2021/day19.txt");
         List<Scanner> scanners = new ArrayList<>();
         Scanner currentScanner = null;
