@@ -38,7 +38,7 @@ public class Day2 {
             }
             cursor = cursor + 4;
         }
-        System.out.println( "task1: " + items.get(0));
+        System.out.println("task1: " + items.get(0));
     }
 
     public static void task2() {
@@ -46,8 +46,8 @@ public class Day2 {
         List<Integer> initialItems = ParseUtils.splitByDelimiter(lines.get(0), ",").stream()
                 .map(Integer::parseInt)
                 .toList();
-        for (int noun = 0; noun <= 99; noun++){
-            for (int verb = 0; verb <= 99; verb++){
+        for (int noun = 0; noun <= 99; noun++) {
+            for (int verb = 0; verb <= 99; verb++) {
                 int cursor = 0;
                 List<Integer> items = new ArrayList<>(initialItems);
                 items.set(1, noun);
