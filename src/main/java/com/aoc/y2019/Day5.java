@@ -14,14 +14,14 @@ public class Day5 {
         List<Integer> items = ParseUtils.splitByDelimiter(lines.get(0), ",").stream()
                 .map(Integer::parseInt)
                 .toList();
-        int res = runIntCode(items, 8);
+        int res = runIntCode(items, new ArrayList<>(List.of(0)));
         System.out.println("task1: " + res);
-        res = runIntCode(items, 5);
+        res = runIntCode(items, new ArrayList<>(List.of(5)));
         System.out.println("task2: " + res);
     }
 
     private static int processOperation(int code, int addr1, int addr2, int addr3,
-                                        List<Integer> items, int cursor, int input, List<Integer> outputs) {
+                                        List<Integer> items, int cursor, List<Integer> inputs, List<Integer> outputs) {
         if (code == 1) {
             Integer result = items.get(addr1) + items.get(addr2);
             items.set(addr3, result);
@@ -31,7 +31,7 @@ public class Day5 {
             items.set(addr3, result);
             cursor = cursor + 4;
         } else if (code == 3) {
-            items.set(addr1, input);
+            items.set(addr1, inputs.removeFirst());
             cursor = cursor + 2;
         } else if (code == 4) {
             cursor = cursor + 2;
@@ -82,12 +82,12 @@ public class Day5 {
             if (modes.size() > 1 && modes.get(1) == 1) {
                 addr2 = cursor + 2;
             }
-            cursor = processOperation(opCode, addr1, addr2, addr3, items, cursor, input, outputs);
+            cursor = processOperation(opCode, addr1, addr2, addr3, items, cursor, inputs, outputs);
         }
         return cursor;
     }
 
-    public static int runIntCode(List<Integer> items, int input) {
+    public static int runIntCode(List<Integer> items, List<Integer> inputs) {
         items = new ArrayList<>(items);
         int cursor = 0;
         List<Integer> outputs = new ArrayList<>();
@@ -105,7 +105,7 @@ public class Day5 {
             if ((cursor + 3) < items.size()) {
                 addr3 = items.get(cursor + 3);
             }
-            cursor = processOperation(code, addr1, addr2, addr3, items, cursor, input, outputs);
+            cursor = processOperation(code, addr1, addr2, addr3, items, cursor, inputs, outputs);
         }
         return outputs.getLast();
     }
