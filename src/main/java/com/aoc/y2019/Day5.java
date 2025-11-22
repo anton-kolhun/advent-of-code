@@ -10,14 +10,21 @@ public class Day5 {
 
 
     public static void main(String[] args) {
+        task();
+    }
+
+
+    public static void task() {
         List<String> lines = FilesUtils.readFile("aoc_2019/day5.txt");
-        List<Integer> items = ParseUtils.splitByDelimiter(lines.get(0), ",").stream()
+        List<Integer> rawItems = ParseUtils.splitByDelimiter(lines.get(0), ",").stream()
                 .map(Integer::parseInt)
                 .toList();
-        int res = runIntCode(items, new ArrayList<>(List.of(0)));
-        System.out.println("task1: " + res);
-        res = runIntCode(items, new ArrayList<>(List.of(5)));
-        System.out.println("task2: " + res);
+        List<Integer> outputs = new ArrayList<>();
+        runIntCode(new ArrayList(List.of(8)), new ArrayList<>(rawItems), outputs);
+        System.out.println("task1: " + outputs.getLast());
+        outputs = new ArrayList<>();
+        runIntCode(new ArrayList(List.of(5)), new ArrayList<>(rawItems), outputs);
+        System.out.println("task2: " + outputs.getLast());
     }
 
     private static int processOperation(int code, int addr1, int addr2, int addr3,
@@ -87,10 +94,9 @@ public class Day5 {
         return cursor;
     }
 
-    public static int runIntCode(List<Integer> items, List<Integer> inputs) {
+    public static List<Integer> runIntCode(List<Integer> inputs, List<Integer> items, List<Integer> outputs) {
         items = new ArrayList<>(items);
         int cursor = 0;
-        List<Integer> outputs = new ArrayList<>();
         while (cursor < items.size()) {
             int code = items.get(cursor);
             int addr1 = -1;
@@ -107,6 +113,6 @@ public class Day5 {
             }
             cursor = processOperation(code, addr1, addr2, addr3, items, cursor, inputs, outputs);
         }
-        return outputs.getLast();
+        return outputs;
     }
 }
