@@ -10,27 +10,14 @@ public class Day5 {
 
 
     public static void main(String[] args) {
-        task1();
-        task2();
-    }
-
-    public static void task1() {
         List<String> lines = FilesUtils.readFile("aoc_2019/day5.txt");
         List<Integer> items = ParseUtils.splitByDelimiter(lines.get(0), ",").stream()
                 .map(Integer::parseInt)
                 .toList();
-        items = new ArrayList<>(items);
-        int cursor = 0;
-        int input = 8;
-        List<Integer> outputs = new ArrayList<>();
-        while (cursor < items.size()) {
-            int code = items.get(cursor);
-            int addr1 = items.get(cursor + 1);
-            int addr2 = items.get(cursor + 2);
-            int addr3 = items.get(cursor + 3);
-            cursor = processOperation(code, addr1, addr2, addr3, items, cursor, input, outputs);
-        }
-        System.out.println("task1: " + outputs.getLast());
+        int res = runIntCode(items, 8);
+        System.out.println("task1: " + res);
+        res = runIntCode(items, 5);
+        System.out.println("task2: " + res);
     }
 
     private static int processOperation(int code, int addr1, int addr2, int addr3,
@@ -100,14 +87,9 @@ public class Day5 {
         return cursor;
     }
 
-    public static void task2() {
-        List<String> lines = FilesUtils.readFile("aoc_2019/day5.txt");
-        List<Integer> items = ParseUtils.splitByDelimiter(lines.get(0), ",").stream()
-                .map(Integer::parseInt)
-                .toList();
+    public static int runIntCode(List<Integer> items, int input) {
         items = new ArrayList<>(items);
         int cursor = 0;
-        int input = 5;
         List<Integer> outputs = new ArrayList<>();
         while (cursor < items.size()) {
             int code = items.get(cursor);
@@ -125,6 +107,6 @@ public class Day5 {
             }
             cursor = processOperation(code, addr1, addr2, addr3, items, cursor, input, outputs);
         }
-        System.out.println("task2: " + outputs.getLast());
+        return outputs.getLast();
     }
 }
