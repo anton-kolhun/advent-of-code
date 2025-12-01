@@ -3,11 +3,15 @@ package com.aoc.y2019;
 import com.aoc.y2023.helper.FilesUtils;
 import com.aoc.y2023.helper.ParseUtils;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Day5 {
 
+    static final String xz ="{ \"cells\": [ { \"address\": { \"x\": \"0\" }, \"value\": 0.0782 } ] }";
 
     public static void main(String[] args) {
         task();
@@ -22,9 +26,25 @@ public class Day5 {
         List<Integer> outputs = new ArrayList<>();
         runIntCode(new ArrayList(List.of(8)), new ArrayList<>(rawItems), outputs);
         System.out.println("task1: " + outputs.getLast());
+
+//        Map<BigInteger, BigInteger> items = new HashMap<>();
+//        for (int i = 0; i < rawItems.size(); i++) {
+//            items.put(BigInteger.valueOf(i), BigInteger.valueOf(rawItems.get(i)));
+//        }
+//
+//        Day9.runIntCode(new ArrayList(List.of(BigInteger.valueOf(8))), items, new ArrayList<>(), new Day9.RelativeBaseState(BigInteger.ZERO));
+//        System.out.println(outputs.getLast());
+
         outputs = new ArrayList<>();
         runIntCode(new ArrayList(List.of(5)), new ArrayList<>(rawItems), outputs);
         System.out.println("task2: " + outputs.getLast());
+        Map<BigInteger, BigInteger> items = new HashMap<>();
+        for (int i = 0; i < rawItems.size(); i++) {
+            items.put(BigInteger.valueOf(i), BigInteger.valueOf(rawItems.get(i)));
+        }
+
+        Day9.runIntCode(new ArrayList(List.of(BigInteger.valueOf(5))), items, new ArrayList<>(), new Day9.RelativeBaseState(BigInteger.ZERO));
+        System.out.println(outputs.getLast());
     }
 
     private static int processOperation(int code, int addr1, int addr2, int addr3,
