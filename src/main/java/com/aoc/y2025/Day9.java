@@ -45,7 +45,6 @@ public class Day9 {
     private static BigInteger calculateSquare(Coordinate c1, Coordinate c2) {
         return BigInteger.valueOf(Math.abs(c1.row - c2.row) + 1).multiply(
                 BigInteger.valueOf(Math.abs(c1.column - c2.column) + 1));
-
     }
 
     record Coordinate(Integer row, Integer column) {
@@ -91,7 +90,7 @@ public class Day9 {
             Coordinate c1 = redCoords.get(i);
             for (int j = i + 1; j < redCoords.size(); j++) {
                 Coordinate c2 = redCoords.get(j);
-                boolean withinArea = check(c1, c2, rowToCoordsSorted);
+                boolean withinArea = withinArea(c1, c2, rowToCoordsSorted);
                 if (withinArea) {
                     BigInteger square = calculateSquare(c1, c2);
                     if (square.compareTo(max) > 0) {
@@ -103,32 +102,31 @@ public class Day9 {
         System.out.println("task2: " + max);
     }
 
-    private static boolean check(Coordinate c1, Coordinate c2, Map<Integer, List<Coordinate>> rowToCoords) {
+    private static boolean withinArea(Coordinate c1, Coordinate c2, Map<Integer, List<Coordinate>> rowToCoords) {
         int minRow = Math.min(c1.row, c2.row);
         int maxRow = Math.max(c1.row, c2.row);
         int minCol = Math.min(c1.column, c2.column);
         int maxCol = Math.max(c1.column, c2.column);
         for (int row = minRow; row <= maxRow; row++) {
             List<Coordinate> rowValues = rowToCoords.get(row);
-
             if (minCol < rowValues.getFirst().column || maxCol > rowValues.getLast().column()) {
                 return false;
             }
             boolean inArea = false;
             int prevCol = -10;
-            int counter = 0;
+            int crossings = 0;
             for (int i = 0; i < rowValues.size() - 1; i++) {
                 Coordinate cursor = rowValues.get(i);
                 Coordinate next = rowValues.get(i + 1);
                 if (cursor.column != prevCol + 1) {
-                    counter++;
+                    crossings++;
                 }
                 prevCol = cursor.column;
-                if (inArea && (counter % 2 == 0)) {
+                if (inArea && (crossings % 2 == 0)) {
                     return false;
                 }
                 if (minCol >= cursor.column && minCol <= next.column) {
-                    if (counter % 2 == 0) {
+                    if (crossings % 2 == 0) {
                         return false;
                     }
                     inArea = true;
