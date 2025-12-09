@@ -115,22 +115,23 @@ public class Day9 {
             boolean inArea = false;
             int prevCol = -10;
             int crossings = 0;
-            for (int i = 0; i < rowValues.size(); i++) {
-                Coordinate cursor = rowValues.get(i);
-                if (cursor.column != prevCol + 1) {
+            for (int i = 0; i < rowValues.size() - 1; i++) {
+                Coordinate current = rowValues.get(i);
+                Coordinate next = rowValues.get(i + 1);
+                if (current.column != prevCol + 1) {
                     crossings++;
                 }
-                prevCol = cursor.column;
+                prevCol = current.column;
                 if (inArea && (crossings % 2 == 0)) {
                     return false;
                 }
-                if (minCol >= cursor.column) {
+                if (minCol >= current.column && minCol <= next.column) {
                     if (crossings % 2 == 0) {
                         return false;
                     }
                     inArea = true;
                 }
-                if (maxCol >= cursor.column) {
+                if (maxCol >= current.column && maxCol <= next.column) {
                     break;
                 }
             }
