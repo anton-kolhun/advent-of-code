@@ -96,9 +96,10 @@ public class Day11 {
         for (Edge edge : edges) {
             BigInteger res;
             LinkedHashSet<String> nextPath = new LinkedHashSet<>(path);
-            nextPath.add(edge.to);
-            res = dfs(fromEdges, edge.to, end, cache, nextPath);
-            total = total.add(res);
+            if (nextPath.add(edge.to)) {
+                res = dfs(fromEdges, edge.to, end, cache, nextPath);
+                total = total.add(res);
+            }
         }
         cache.put(cursor, total);
         return total;
