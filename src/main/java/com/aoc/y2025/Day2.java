@@ -35,19 +35,17 @@ public class Day2 {
                 totalNumbs.addAll(total);
             }
             for (List<String> numb : totalNumbs) {
-                if (numb.size() > 0 && !numb.getFirst().equals("0")) {
+                if (!numb.isEmpty() && !numb.getFirst().equals("0")) {
                     BigInteger concat = getConcat(numb);
                     if (concat.compareTo(new BigInteger(rangeVals.getFirst())) >= 0
                             && concat.compareTo(new BigInteger(rangeVals.getLast())) <= 0) {
                         incorrect.add(concat);
                     }
                 }
-
             }
         }
         BigInteger sum = incorrect.stream().reduce(BigInteger::add).get();
         System.out.println("task1: " + sum);
-
     }
 
     private static BigInteger getConcat(List<String> numb) {
