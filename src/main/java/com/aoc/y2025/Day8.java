@@ -60,16 +60,9 @@ public class Day8 {
                     coordToCircuits.put(mergedCoord, merged);
                 }
             }
-
         }
 
         Set<Circuit> circuits = new HashSet<>(coordToCircuits.values());
-        Set<Circuit> unique = new HashSet<>();
-        for (Coord coordinate : coordinates) {
-            Set<Coord> defCoord = new HashSet<>();
-            defCoord.add(coordinate);
-            unique.add(coordToCircuits.getOrDefault(coordinate, new Circuit(defCoord)));
-        }
         List<Circuit> sorted = circuits.stream()
                 .sorted((o1, o2) -> o2.coords.size() - o1.coords.size())
                 .toList();

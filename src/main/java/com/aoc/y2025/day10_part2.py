@@ -1,3 +1,5 @@
+#pip install z3-solver
+
 from z3 import *
 import re
 
