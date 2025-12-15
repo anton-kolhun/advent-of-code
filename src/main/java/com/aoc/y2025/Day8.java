@@ -107,7 +107,7 @@ public class Day8 {
         Set<List<Integer>> visited = new HashSet<>();
         Set<Integer> visitedCoords = new HashSet<>();
         List<Integer> minPair = null;
-        while (visitedCoords.size() < coordinates.size()) {
+        while (visitedCoords.size() < coordinates.size() || new HashSet<>(coordToCircuits.values()).size() > 1) {
             double min = Long.MAX_VALUE;
             minPair = new ArrayList<>();
             for (int i = 0; i < coordinates.size() - 1; i++) {
